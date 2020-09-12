@@ -6,7 +6,7 @@ from firebase_admin import db
 
 # Initialize this project with firebase support
 # KEYS file not shared for security reasons
-cred = credentials.Certificate('keys.json')
+cred = credentials.Certificate('/tmp/keys.json')
 
 # Initialize the app to service account
 firebase_admin.initialize_app(cred, {

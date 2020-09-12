@@ -14,5 +14,5 @@ key_object = {
     "client_x509_cert_url": os.environ.get('CLIENT_X509_CERT_URL')
 }
 
-with open('../keys.json', 'w') as output:
+with open('/tmp/keys.json', 'w') as output:
     json.dump(key_object, output, indent=2)
