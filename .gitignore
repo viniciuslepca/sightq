@@ -1,6 +1,6 @@
 # Others
 /.idea
-/backend/keys.json
+keys.json
 setup.sh
 
 # Byte-compiled / optimized / DLL files

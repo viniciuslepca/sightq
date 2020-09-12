@@ -1,5 +1,5 @@
 from flask import Flask, request, abort, jsonify
-import analysis
+from . import analysis
 
 app = Flask(__name__)
 
@@ -67,7 +67,7 @@ def index(meetingid):
 '''
 
 @app.errorhandler(404)
-def not_found():
+def not_found(error):
     return jsonify({
         "success": False,
         "error_code": 404,
