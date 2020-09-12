@@ -1,6 +1,7 @@
 # Others
 /.idea
 /backend/keys.json
+setup.sh
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

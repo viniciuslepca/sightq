@@ -11,7 +11,7 @@ cred = credentials.Certificate("keys.json")
 firebase_admin.initialize_app(cred, {
     'databaseURL' : 'https://sightq-d333a.firebaseio.com/'
     # https://firebase.google.com/docs/database/admin/start#python
-    # ^ how to initialize with separte security rules
+    # ^ how to initialize with separate security rules
 })
 
 # get data from reference
