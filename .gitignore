@@ -1,6 +1,7 @@
 # Others
 /.idea
 /backend/keys.json
+/backend/jwt.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
