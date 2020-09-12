@@ -29,7 +29,7 @@ def index():
 # Sign-in methods
 @app.route("/user/<str:uid>", methods = ["POST"])
 def index():
-    ref
+    return
 
 
 # Sign-in methods
@@ -75,7 +75,6 @@ def not_found():
         "message": "Not Found"
     }), 404
 
-@app.error_handler(400)
 
 if (__name__ == "__main__"):
     app.run()
