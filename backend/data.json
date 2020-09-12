@@ -1,0 +1,59 @@
+{
+   "timeline" : [
+      {
+         "ts" : "00:00:00.160",
+         "users" : [
+            {
+               "avatar_url" : "https://images.zoom.us/p/[redacted]/19f6430f-ca72-4154-8998-ede6be4542c7-837",
+               "client_type" : 0,
+               "email_address" : "[redacted]",
+               "multiple_people" : true,
+               "user_id" : 16778240,
+               "username" : "Tommy G",
+               "zoom_userid" : "[redacted]"
+            }
+         ]
+      },
+      {
+         "ts" : "00:00:01.410",
+         "users" : []
+      },
+      {
+         "ts" : "00:00:02.160",
+         "users" : [
+            {
+               "avatar_url" : "https://images.zoom.us/p/[redacted]/19f6430f-ca72-4154-8998-ede6be4542c7-837",
+               "client_type" : 0,
+               "email_address" : "[redacted]",
+               "multiple_people" : true,
+               "user_id" : 16778240,
+               "username" : "Tommy G",
+               "zoom_userid" : "[redacted]"
+            }
+         ]
+      },
+      {
+         "ts" : "00:00:05.410",
+         "users" : []
+      },
+      {
+         "ts" : "00:00:08.410",
+         "users" : [
+            {
+               "avatar_url" : "https://images.zoom.us/p/[redacted]/19f6430f-ca72-4154-8998-ede6be4542c7-837",
+               "client_type" : 0,
+               "email_address" : "[redacted]",
+               "multiple_people" : true,
+               "user_id" : 16778240,
+               "username" : "Tommy G",
+               "zoom_userid" : "[redacted]"
+            }
+         ]
+      },
+      {
+         "ts" : "00:00:09.410",
+         "users" : []
+      }
+   ],
+   "version" : 100
+}
