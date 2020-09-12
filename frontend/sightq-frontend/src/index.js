@@ -62,7 +62,7 @@ function Header(props) {
                  onSelect={(selectedKey) => props.setActivePage(selectedKey)}>
                 {Object.keys(props.pages).map(pageName => {
                     const page = props.pages[pageName];
-                    return <Nav.Link eventKey={page}>{page}</Nav.Link>
+                    return <Nav.Link key={page} eventKey={page}>{page}</Nav.Link>
                 })}
             </Nav>
             <Navbar.Toggle />
