@@ -1,6 +1,5 @@
-from flask import Flask, request, abort
-import analysis
-
+from flask import Flask, request, abort, jsonify
+from . import analysis
 
 app = Flask(__name__)
 
@@ -27,15 +26,15 @@ def index():
 #######################
 
 # Sign-in methods
-@app.route("/user/<str:uid>", methods = ["POST"])
-def index():
-    ref
+@app.route("/user/<uid>", methods = ["POST"])
+def get_user(uid):
+    return None
 
 
 # Sign-in methods
 @app.route("/sign-in", methods = ["POST"])
-def index():
-    return
+def sign_in():
+    return None
 
 '''
 Have them all return json - key is success : true
@@ -67,15 +66,13 @@ def index(meetingid):
 # also header parameters
 '''
 
-@app.error_handler(404)
-def not_found():
+@app.errorhandler(404)
+def not_found(error):
     return jsonify({
         "success": False,
         "error_code": 404,
         "message": "Not Found"
     }), 404
 
-@app.error_handler(400)
-
-if (__name__ == "__main__"):
+if __name__ == "__main__":
     app.run()
