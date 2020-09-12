@@ -16,7 +16,16 @@ firebase_admin.initialize_app(cred, {
 })
 
 # get data from reference
-ref = db.reference("/user")
+ref = db.reference("/meetings")
+ref2 = db.reference("/user")
 
 def getExampleData():
-    return ref.get()
+    ref.child("atqr23").get()
+    ref.child("atqr23").get()
+
+    ref.update({"duration": 101231, "engagement" : 1243124})
+
+
+
+def getFirstName(uid):
+    json =

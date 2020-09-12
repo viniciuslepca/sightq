@@ -1,6 +1,7 @@
 # Others
 /.idea
 keys.json
+jwt.json
 setup.sh
 
 # Byte-compiled / optimized / DLL files
