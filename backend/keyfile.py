@@ -1,4 +1,5 @@
 import os
+import json
 
 key_object = {
     "type": os.environ.get('TYPE'),
@@ -12,3 +13,6 @@ key_object = {
     "auth_provider_x509_cert_url": os.environ.get('AUTH_PROVIDER_X509_CERT_URL'),
     "client_x509_cert_url": os.environ.get('CLIENT_X509_CERT_URL')
 }
+
+with open('../keys.json', 'w') as output:
+    json.dump(key_object, output, indent=2)
