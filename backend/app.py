@@ -36,6 +36,17 @@ def get_user(uid):
 def sign_in():
     return None
 
+# Process Recording
+@app.route("/recording", methods = ["POST"])
+def process_recording():
+    return None
+
+# Process Transcript
+@app.route("/transcript", methods = ["POST"])
+def process_recording():
+    return None
+
+
 '''
 Have them all return json - key is success : true
 
