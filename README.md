@@ -26,3 +26,8 @@ SightQ listens on an authenticated user's Zoom cloud for newly posted recordings
 - gathering trial data to refine mathematical models
 
 
+## Link for SightQ!
+
+http://ac7d9b22f8ff.ngrok.io/
+
+
