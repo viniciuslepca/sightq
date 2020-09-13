@@ -1,12 +1,13 @@
 import json
 from datetime import datetime as dt, timezone
 import os
-import zoomportal as zp
 import numpy as np
 
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
+
+from . import zoomportal as zp
 
 # Initialize this project with firebase support
 # KEYS file not shared for security reasons
@@ -80,13 +81,13 @@ class MeetingMetric():
         for val in sum_dict:
             d = list(val.values())[0]
             u = list(val.keys())[0]
-            if (u == "BLANK KEY"):
+            if u == "BLANK KEY":
                 continue
             time.append(d)
             users.append(list(val.keys())[0])
 
         z = [x for _,x in sorted(zip(time,users))]
-        if (len(z) >= 3):
+        if len(z) >= 3:
             return [z[0], z[1], z[2]]
         else:
             return z[0]
@@ -109,7 +110,7 @@ class MeetingMetric():
             d = list(val.values())[0]
             engagement.append(d)
         # add a 0 for each person not counted
-        for i in range (0, self.meeting.n_participants - len(engagement)):
+        for i in range(0, self.meeting.n_participants - len(engagement)):
             engagement.append(0)
         return engagement
 
