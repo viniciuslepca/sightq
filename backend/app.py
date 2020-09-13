@@ -39,6 +39,12 @@ def sign_in():
 # Process Recording
 @app.route("/recording", methods = ["POST"])
 def process_recording():
+    data = request.json
+    assert(data['event'] == 'recording.completed')
+    download_token = None
+    if 'download_token' in data:
+        download_token = data['download_token']
+    print(data)
     return None
 
 # Process Transcript
