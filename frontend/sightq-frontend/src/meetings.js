@@ -5,11 +5,10 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import {XYPlot, VerticalGridLines, HorizontalGridLines, LineSeries, XAxis, YAxis} from 'react-vis';
 // Images
 const thumbsUpImage = require('./images/thumbs-up.png');
 const thumbsDownImage = require('./images/thumbs-down.png');
-
-const baseUrl = "http://localhost:5000";
 
 function titleCase(str) {
     return str.toLowerCase().split(' ').map(function(word) {
@@ -35,7 +34,7 @@ class MeetingsPage extends React.Component {
     };
 
     getMeetings = async () => {
-        const url = baseUrl + "/meetings";
+        const url = this.props.baseurl + "/meetings";
         const response = await fetch(url).then(response => response.json());
         if (response.success) {
             this.setState({meetings: response.meetings})
@@ -57,6 +56,7 @@ class MeetingsPage extends React.Component {
                 <DetailedMeetingView
                     show={this.state.displayDetailedMeeting !== null}
                     id={this.state.displayDetailedMeeting}
+                    baseurl={this.props.baseurl}
                     onHide={() => this.setDisplayDetailedMeeting(null)}
                 />
             </div>
@@ -151,7 +151,7 @@ class DetailedMeetingView extends React.Component {
     }
 
     getMeetingDetail = async () => {
-        const url = baseUrl + "/meetings/" + this.props.id;
+        const url = this.props.baseurl + "/meetings/" + this.props.id;
         const response = await fetch(url).then(response => response.json());
         if (response.success) {
             this.setState({meeting: response.meeting})
@@ -186,15 +186,41 @@ class DetailedMeetingView extends React.Component {
                 </Modal.Header>
                 <Modal.Body>
                     <h6>Duration: {this.state.meeting.duration}</h6>
-                    <p>
-                        Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
-                        dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac
-                        consectetur ac, vestibulum at eros.
-                    </p>
+                    <DetailedMeetingInformation/>
                 </Modal.Body>
             </Modal>
         );
     }
+}
+
+function DetailedMeetingInformation(props) {
+    const data = [
+        {x: 0, y: 8},
+        {x: 1, y: 5},
+        {x: 2, y: 4},
+        {x: 3, y: 9},
+        {x: 4, y: 1},
+        {x: 5, y: 7},
+        {x: 6, y: 6},
+        {x: 7, y: 3},
+        {x: 8, y: 2},
+        {x: 9, y: 0}
+    ];
+    return (
+        <Container>
+            <Row>
+                <Col>
+                    <XYPlot height={300} width={300}>
+                        <VerticalGridLines />
+                        <HorizontalGridLines />
+                        <XAxis />
+                        <YAxis />
+                        <LineSeries data={data} />
+                    </XYPlot>
+                </Col>
+            </Row>
+        </Container>
+    );
 }
 
 export default MeetingsPage;
