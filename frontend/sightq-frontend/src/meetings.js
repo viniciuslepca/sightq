@@ -5,7 +5,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import {XYPlot, VerticalGridLines, HorizontalGridLines, LineSeries, XAxis, YAxis} from 'react-vis';
+import {XYPlot, LineSeries, YAxis} from 'react-vis';
 // Images
 const thumbsUpImage = require('./images/thumbs-up.png');
 const thumbsDownImage = require('./images/thumbs-down.png');
@@ -52,11 +52,13 @@ export default class MeetingsPage extends React.Component {
             <div id="meetings-body">
                 {this.state.meetings.map(meeting => <MeetingCard key={meeting.id}
                                                                  meeting={meeting}
+                                                                 secondsconverter={this.props.secondsconverter}
                                                                  setDisplayDetailedMeeting={this.setDisplayDetailedMeeting}/>)}
                 <DetailedMeetingView
                     show={this.state.displayDetailedMeeting !== null}
                     id={this.state.displayDetailedMeeting}
                     baseurl={this.props.baseurl}
+                    secondsconverter={this.props.secondsconverter}
                     onHide={() => this.setDisplayDetailedMeeting(null)}
                 />
             </div>
@@ -72,7 +74,6 @@ class MeetingCard extends React.Component {
                 <Card.Body>
                     <Container>
                         <Row>
-                            {/*<Col md="auto"><Card.Img src={meeting.imageUrl} alt="Meeting"/></Col>*/}
                             <Col md="auto">
                                 <video width="320" height="240" controls>
                                     <source src={meeting.imageUrl}/>
@@ -80,25 +81,19 @@ class MeetingCard extends React.Component {
                             </Col>
                             <Col>
                                 <Card.Title>{meeting.title}</Card.Title>
-                                {
-                                    meeting.analyzed ?
-                                        <div>
-                                            <Card.Subtitle className="mb-2 text-muted">Duration: {meeting.duration}</Card.Subtitle>
-                                            <MeetingCardStats meeting={meeting}/>
-                                        </div> :
-                                        null
-                                }
+                                <div>
+                                    <Card.Subtitle className="mb-2 text-muted">
+                                        Duration: {this.props.secondsconverter(meeting.duration)}
+                                    </Card.Subtitle>
+                                    <MeetingCardStats meeting={meeting}/>
+                                </div>
                             </Col>
                         </Row>
                         <Row>
                             <Col>
                                 <div style={{textAlign: "right"}}>
-                                    {
-                                        meeting.analyzed ?
-                                            <Button onClick={() => this.props.setDisplayDetailedMeeting(meeting.id)}
-                                                    variant="primary">+ Details</Button> :
-                                            <Button disabled>In Analysis</Button>
-                                    }
+                                    <Button onClick={() => this.props.setDisplayDetailedMeeting(meeting.id)}
+                                            variant="primary">+ Details</Button>
                                 </div>
                             </Col>
                         </Row>
@@ -129,18 +124,10 @@ class MeetingCardStats extends React.Component {
 
         return (
             <Card.Body>
-                <Container>
-                    <Row>
-                        <Col>
-                            {positiveScores.map(score => <Property type="positive"
-                                                                          key={score.name} score={score}/>)}
-                        </Col>
-                        <Col>
-                            {negativeScores.map(score => <Property type="negative"
-                                                                          key={score.name} score={score}/>)}
-                        </Col>
-                    </Row>
-                </Container>
+                {positiveScores.map(score => <Property type="positive"
+                                                       key={score.name} score={score}/>)}
+                {negativeScores.map(score => <Property type="negative"
+                                                       key={score.name} score={score}/>)}
             </Card.Body>
         );
     }
@@ -154,7 +141,7 @@ function Property(props) {
         <Container>
             <Row>
                 <Col md="auto"><img style={{width: "20px", height: "20px"}} src={imageRef} alt={imageAlt}/></Col>
-                <Col>{titleCase(props.score.name)}: {formatPercentage(props.score.value)}</Col>
+                <Col style={{textAlign: "left"}}>{titleCase(props.score.name)}: {formatPercentage(props.score.value)}</Col>
             </Row>
         </Container>
     );
@@ -192,20 +179,42 @@ class DetailedMeetingView extends React.Component {
         const id = this.props.id;
         if (id === null || this.state.meeting === null) return null;
 
+        const meeting = this.state.meeting;
         return (
             <Modal
-                {...this.props}
+                show={this.props.show}
+                onHide={this.props.onHide}
                 size="xl"
                 centered>
                 <div style={{backgroundColor: "#f8f9fa"}}>
                     <Modal.Header closeButton>
                         <Modal.Title>
-                            {this.state.meeting.title}
+                            {meeting.title}
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <h6>Duration: {this.state.meeting.duration}</h6>
-                        <DetailedMeetingInformation/>
+                        <Container>
+                            <Row>
+                                <Col>
+                                    <div style={{textAlign: "center"}}>
+                                        <h6>General Information</h6>
+                                    </div>
+                                    Meeting Date/Time: {meeting.start_time}<br/>
+                                    Duration: {this.props.secondsconverter(meeting.duration)}<br/>
+                                    Participants: {meeting.participants.join(", ")}<br/>
+                                    Least Active Participants: {meeting.properties.lowest_participants.join(", ")}<br/>
+                                </Col>
+                                <Col>
+                                    <div style={{textAlign: "center"}}>
+                                        <h6>Scores</h6>
+                                        <MeetingCardStats meeting={this.state.meeting}/>
+                                    </div>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <DetailedMeetingPlots meeting={this.state.meeting}/>
+                            </Row>
+                        </Container>
                     </Modal.Body>
                 </div>
 
@@ -214,30 +223,26 @@ class DetailedMeetingView extends React.Component {
     }
 }
 
-function DetailedMeetingInformation(props) {
-    const data = [
-        {x: 0, y: 8},
-        {x: 1, y: 5},
-        {x: 2, y: 4},
-        {x: 3, y: 9},
-        {x: 4, y: 1},
-        {x: 5, y: 7},
-        {x: 6, y: 6},
-        {x: 7, y: 3},
-        {x: 8, y: 2},
-        {x: 9, y: 0}
-    ];
+function DetailedMeetingPlots(props) {
+    const engagement = props.meeting.properties.engagement;
+    let data = [];
+    for (let i = 0; i < engagement.length; i++) {
+        data.push({
+            x: i,
+            y: (100 * Number(engagement[i])).toFixed(2)
+        })
+    }
     return (
         <Container>
             <Row>
-                <Col>
+                <Col md="auto">
                     <Card>
-                        <XYPlot height={300} width={300}>
-                            <VerticalGridLines />
-                            <HorizontalGridLines />
-                            <XAxis />
-                            <YAxis />
-                            <LineSeries data={data} />
+                        <div style={{textAlign: "center"}}>
+                            <h6>Distribution of participation (%)</h6>
+                        </div>
+                        <XYPlot title="test" height={300} width={300}>
+                            <YAxis/>
+                            <LineSeries data={data}/>
                         </XYPlot>
                     </Card>
                 </Col>
