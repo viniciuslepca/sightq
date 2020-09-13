@@ -67,7 +67,7 @@ class MeetingMetric():
               "silence": self.silence,
               "unanswered": self.unanswered,
               "lowest_participants": self.lowest_participants,
-              "complexity" : self.complexity
+              "complexity": self.complexity
             }}
 
     def transcribe_and_analyze(self):
@@ -193,15 +193,12 @@ def get_meeting_metrics(meeting):
     m.meeting = meeting
     # Get all the metrics for the meeting
 
-    m.transcribe_and_analyze()
-
     m.generate_all_metrics()
+    m.transcribe_and_analyze()
     ### These are examples for now
     m.push_to_firebase()
     return m
 
 
-def regenerate_all_meetings():
-    mtgs = zp.get_all_meetings()
-    for m in mtgs:
-        get_meeting_metrics(m)
+mtg = zp.get_all_meetings()[1]
+get_meeting_metrics(mtg)
