@@ -7,6 +7,7 @@ import MeetingsPage from './meetings'
 
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-vis/dist/style.css';
 
 class App extends React.Component {
     constructor(props) {
@@ -21,7 +22,8 @@ class App extends React.Component {
         this.state = {
             userName: "TEMP_USER_NAME",
             activePage: pages.MEETINGS_PAGE,
-            pages: pages
+            pages: pages,
+            baseUrl: "http://localhost:5000"
         };
     }
 
@@ -32,7 +34,7 @@ class App extends React.Component {
     renderActivePage = () => {
         switch (this.state.activePage) {
             case this.state.pages.MEETINGS_PAGE:
-                return <MeetingsPage/>
+                return <MeetingsPage baseurl={this.state.baseUrl}/>
             case this.state.pages.TRENDS_PAGE:
                 return <p>Trends page</p>
             case this.state.pages.SETTINGS_PAGE:
