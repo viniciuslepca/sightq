@@ -10,12 +10,6 @@ import {XYPlot, LineSeries, YAxis} from 'react-vis';
 const thumbsUpImage = require('./images/thumbs-up.png');
 const thumbsDownImage = require('./images/thumbs-down.png');
 
-function titleCase(str) {
-    return str.toLowerCase().replace('_', ' ').split(' ').map(function(word) {
-        return word.replace(word[0], word[0].toUpperCase());
-    }).join(' ');
-}
-
 function formatPercentage(number) {
     return (number * 100).toFixed(0) + "%";
 }
@@ -53,10 +47,12 @@ export default class MeetingsPage extends React.Component {
                 {this.state.meetings.map(meeting => <MeetingCard key={meeting.id}
                                                                  meeting={meeting}
                                                                  secondsconverter={this.props.secondsconverter}
+                                                                 titlecase={this.props.titlecase}
                                                                  setDisplayDetailedMeeting={this.setDisplayDetailedMeeting}/>)}
                 <DetailedMeetingView
                     show={this.state.displayDetailedMeeting !== null}
                     id={this.state.displayDetailedMeeting}
+                    titlecase={this.props.titlecase}
                     baseurl={this.props.baseurl}
                     secondsconverter={this.props.secondsconverter}
                     onHide={() => this.setDisplayDetailedMeeting(null)}
@@ -85,7 +81,7 @@ class MeetingCard extends React.Component {
                                     <Card.Subtitle className="mb-2 text-muted">
                                         Duration: {this.props.secondsconverter(meeting.duration)}
                                     </Card.Subtitle>
-                                    <MeetingCardStats meeting={meeting}/>
+                                    <MeetingCardStats meeting={meeting} titlecase={this.props.titlecase}/>
                                 </div>
                             </Col>
                         </Row>
@@ -124,9 +120,9 @@ class MeetingCardStats extends React.Component {
 
         return (
             <Card.Body>
-                {positiveScores.map(score => <Property type="positive"
+                {positiveScores.map(score => <Property type="positive" titlecase={this.props.titlecase}
                                                        key={score.name} score={score}/>)}
-                {negativeScores.map(score => <Property type="negative"
+                {negativeScores.map(score => <Property type="negative" titlecase={this.props.titlecase}
                                                        key={score.name} score={score}/>)}
             </Card.Body>
         );
@@ -141,7 +137,7 @@ function Property(props) {
         <Container>
             <Row>
                 <Col md="auto"><img style={{width: "20px", height: "20px"}} src={imageRef} alt={imageAlt}/></Col>
-                <Col style={{textAlign: "left"}}>{titleCase(props.score.name)}: {formatPercentage(props.score.value)}</Col>
+                <Col style={{textAlign: "left"}}>{props.titlecase(props.score.name)}: {formatPercentage(props.score.value)}</Col>
             </Row>
         </Container>
     );
@@ -194,7 +190,7 @@ class DetailedMeetingView extends React.Component {
                     </Modal.Header>
                     <Modal.Body>
                         <Container>
-                            <Row>
+                            <Row style={{marginBottom: "10px"}}>
                                 <Col>
                                     <div style={{textAlign: "center"}}>
                                         <h6>General Information</h6>
@@ -207,7 +203,7 @@ class DetailedMeetingView extends React.Component {
                                 <Col>
                                     <div style={{textAlign: "center"}}>
                                         <h6>Scores</h6>
-                                        <MeetingCardStats meeting={this.state.meeting}/>
+                                        <MeetingCardStats titlecase={this.props.titlecase} meeting={this.state.meeting}/>
                                     </div>
                                 </Col>
                             </Row>
@@ -235,12 +231,12 @@ function DetailedMeetingPlots(props) {
     return (
         <Container>
             <Row>
-                <Col md="auto">
+                <Col style={{margin: "0 auto"}} md="auto">
                     <Card>
                         <div style={{textAlign: "center"}}>
                             <h6>Distribution of participation (%)</h6>
                         </div>
-                        <XYPlot title="test" height={300} width={300}>
+                        <XYPlot title="test" height={300} width={600}>
                             <YAxis/>
                             <LineSeries data={data}/>
                         </XYPlot>

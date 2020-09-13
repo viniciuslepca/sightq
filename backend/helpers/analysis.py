@@ -1,13 +1,12 @@
 import json
 from datetime import datetime as dt, timezone
 import os
+import zoomportal as zp
 import numpy as np
 
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
-
-from . import zoomportal as zp
 
 # Initialize this project with firebase support
 # KEYS file not shared for security reasons
@@ -35,7 +34,7 @@ class MeetingMetric():
         # Meeting ID
         self.meeting = ""
         # Number of times each person talked
-        self.participation = [""]
+        self.participation = 0
         # How good this participation distribution this
         self.participation_score = 0
         # Number of reactions total
@@ -50,9 +49,6 @@ class MeetingMetric():
         self.unanswered = 0
         # Names of the lowest participants
         self.lowest_participants = [""]
-
-    def compute_metrics(self):
-        return
 
     def to_dict(self):
         return {
@@ -78,19 +74,36 @@ class MeetingMetric():
         self.unanswered = self.get_unanswered(users, times)
         self.lowest_participants = self.get_lowest_participants(sum_dict)
 
+        self.engagement_score = self.get_engagement_score()
+        self.participation_score = self.get_participation_score()
+
+    def get_participation_score(self):
+        a = self.participation  / (4 * (self.meeting.n_participants * self.meeting.duration / 60) ** (1.0 / 2))
+        if (a > 1):
+            return 1
+        if (a < 0):
+            return 0
+        return a
+
+    def get_engagement_score(self):
+        eng = np.asarray(self.engagement)
+        avg = np.average(eng)
+        return float((eng[eng - (0.5) * avg > 0]) / len(self.engagement))
+
+
     def get_lowest_participants(self, sum_dict):
         time = []
         users = []
         for val in sum_dict:
             d = list(val.values())[0]
             u = list(val.keys())[0]
-            if u == "BLANK KEY":
+            if (u == "BLANK KEY"):
                 continue
             time.append(d)
             users.append(list(val.keys())[0])
 
         z = [x for _,x in sorted(zip(time,users))]
-        if len(z) >= 3:
+        if (len(z) >= 3):
             return [z[0], z[1], z[2]]
         else:
             return z[0]
@@ -113,7 +126,7 @@ class MeetingMetric():
             d = list(val.values())[0]
             engagement.append(d)
         # add a 0 for each person not counted
-        for i in range(0, self.meeting.n_participants - len(engagement)):
+        for i in range (0, self.meeting.n_participants - len(engagement)):
             engagement.append(0)
         return engagement
 
@@ -157,55 +170,20 @@ class MeetingMetric():
         ref.set(self.to_dict())
 
 
-
 def get_meeting_metrics(meeting):
     # Create the meeting metric
     m = MeetingMetric()
     # Set the appropiate meeting variable
     m.meeting = meeting
     # Get all the metrics for the meeting
-    m.compute_metrics()
+
+    m.generate_all_metrics()
     ### These are examples for now
-    m.lowest_participants = ["Test", "Horse", "Tree"]
-    m.participants = ["Taco", "Horse", "Dino", "Test", "Tree"]
     m.push_to_firebase()
     return m
 
-'''
-def get_timeline_stats(data_path):
-    with open(data_path) as f:
-        data = json.load(f)
 
-    # with urllib.request.urlopen(data_path) as f:
-    #     data = json.load(f.read())
 
-    timeline = data["timeline"]
-    timeline.sort(key = lambda x: x['ts'])
-    n = len(timeline)
 
-    users = []
-    user_ids = set()
-    for time_pt in timeline:
-        for user in time_pt['users']:
-            user_id = user['user_id']
-            if user_id not in user_ids:
-                user_ids.add(user_id)
-                users.append(user)
-
-    silence = 0.0
-    talk_values = dict()
-    for i in range(n - 1):
-        time_now = datetime.strptime(timeline[i]['ts'], '%H:%M:%S.%f').timestamp()
-        time_next = datetime.strptime(timeline[i + 1]['ts'], '%H:%M:%S.%f').timestamp()
-        delta = time_next - time_now
-        if len(timeline[i]['users']) == 0:
-            silence += delta
-        else:
-            for user in timeline[i]['users']:
-                user_id = user['user_id']
-                if user_id not in talk_values:
-                    talk_values[user_id] = 0
-                talk_values[user_id] += delta
-
-    return talk_values
-'''
+mtg = zp.get_all_meetings()[0]
+get_meeting_metrics(mtg)

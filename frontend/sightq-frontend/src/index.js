@@ -40,6 +40,12 @@ class App extends React.Component {
         return hDisplay + mDisplay + sDisplay;
     };
 
+    titleCase = (str) => {
+        return str.toLowerCase().replace('_', ' ').split(' ').map(function(word) {
+            return word.replace(word[0], word[0].toUpperCase());
+        }).join(' ');
+    };
+
     setActivePage = (page) => {
         this.setState({activePage: page});
     };
@@ -47,9 +53,9 @@ class App extends React.Component {
     renderActivePage = () => {
         switch (this.state.activePage) {
             case this.state.pages.MEETINGS_PAGE:
-                return <MeetingsPage baseurl={this.state.baseUrl} secondsconverter={this.secondsToHms}/>;
+                return <MeetingsPage titlecase={this.titleCase} baseurl={this.state.baseUrl} secondsconverter={this.secondsToHms}/>;
             case this.state.pages.TRENDS_PAGE:
-                return <TrendsPage baseurl={this.state.baseUrl} secondsconverter={this.secondsToHms}/>;
+                return <TrendsPage titlecase={this.titleCase} baseurl={this.state.baseUrl} secondsconverter={this.secondsToHms}/>;
             default:
                 return null
         }
