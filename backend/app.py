@@ -71,7 +71,9 @@ def process_recording():
     download_token = None
     if 'download_token' in data:
         download_token = data['download_token']
-    return 'Shit'
+    return jsonify({
+        'success': True
+    })
 
 # Process Transcript
 @app.route("/transcript", methods = ["POST"])
