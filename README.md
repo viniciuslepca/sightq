@@ -1,4 +1,6 @@
-# SightQ
-## A better way to meet
+# SightQ: A better way to meet
 
-## Test
+## Our mission: SightQ incorporates more data analytics for Zoom meetings to enable meeting hosts to conduct better meetings, whether that be by improving engagement, adapting presentation styles, or decreasing wasted time.
+
+## Built with:
+- test
