@@ -23,7 +23,7 @@ class App extends React.Component {
             userName: "Conner Delahanty",
             activePage: pages.MEETINGS_PAGE,
             pages: pages,
-            baseUrl: "http://localhost:5000"
+            baseUrl: "https://sightq.herokuapp.com/"
         };
     }
 
