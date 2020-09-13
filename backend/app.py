@@ -1,5 +1,5 @@
 from flask import Flask, request, abort, jsonify
-from helpers import analysis
+from helpers import controller
 
 app = Flask(__name__)
 
@@ -39,7 +39,8 @@ def sign_in():
 # Process Recording
 @app.route("/recording", methods = ["POST"])
 def process_recording():
-    data = request.json
+    print(request)
+    data = request.get_json(force=True)
     assert(data['event'] == 'recording.completed')
     download_token = None
     if 'download_token' in data:

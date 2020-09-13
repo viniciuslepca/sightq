@@ -8,6 +8,7 @@ import datetime as dt
 class Meeting():
     def __init__(self):
         self.meeting_id = ""
+        self.topic = ""
         self.duration = ""
         self.start_time = ""
 
@@ -16,9 +17,23 @@ class Meeting():
         self.recording_json = ""
 
         self.n_participants = 0
+        self.participants = []
 
         self.already_analyzed = False
 
+    def to_dict(self):
+        return {
+            "id" : self.meeting_id,
+            "topic" : self.topic,
+            "duration" : self.duration.__str__(),
+            "start_time" : self.start_time.__str__(),
+            "gallery_vid_url" : self.gallery_vid_url,
+            "speaker_vid_url" : self.speaker_vid_url,
+            "recording_json" : self.recording_json,
+            "n_participants" : self.n_participants,
+            "participants" : self.participants,
+            "analyzed" : False
+        }
 
     def _str_to_time(self, t):
         y = int(t[0:4])
@@ -33,6 +48,7 @@ class Meeting():
 
     def create_meeting_from_JSON(self, data):
         self.meeting_id = data["uuid"]
+        self.topic = data["topic"]
         self.start_time = self._str_to_time(data["start_time"])
 
         rec_data_tot = data["recording_files"]
@@ -53,12 +69,9 @@ class Meeting():
             self.recording_json = "../transcripts/" + self.meeting_id + ".json"
         return
 
-    def to_json(self):
-        return json.dumps(self.__dict__)
-
 
 def _get_jwt():
-     with open ('jwt.json') as f:
+     with open ('../jwt.json') as f:
          jwt = json.load(f)
      return jwt["jwt"]
 
@@ -87,6 +100,16 @@ def get_all_meetings():
         mtg_json = data["meetings"][i]
         m = Meeting()
         m.create_meeting_from_JSON(mtg_json)
+
+        # Get participants
+        conn.request("GET", f"/v2/past_meetings/{m.meeting_id}/participants", headers = headers)
+        res = conn.getresponse()
+        data = res.read()
+        data = json.loads(data.decode("UTF-8"))
+        for name in data["participants"]:
+            m.participants.append(name["name"])
+        m.participants = list(set(m.participants))
+        m.n_participants = len(m.participants)
         mtgs.append(m)
 
     return mtgs
