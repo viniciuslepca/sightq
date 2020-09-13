@@ -3,6 +3,8 @@ import os
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
+import zoomportal as zp
+import analysis
 import json
 
 
@@ -99,3 +101,10 @@ def get_historical_field(field):
         }
         output_mtgs.append(mtg_json)
     return output_mtgs
+
+
+def get_meeting_and_metrics(meeting_id):
+    meetings = zp.get_all_meetings()
+    for meeting in meetings:
+        if meeting.meeting_id == meeting_id:
+            metric = analysis.get_meeting_metrics(meeting)

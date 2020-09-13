@@ -14,6 +14,7 @@ class Meeting():
 
         self.gallery_vid_url = ""
         self.speaker_vid_url = ""
+        self.audio_url = ""
         self.recording_json = ""
 
         self.n_participants = 0
@@ -66,6 +67,8 @@ class Meeting():
                 end = self._str_to_time(rec_json["recording_end"]).timestamp()
                 start = self._str_to_time(rec_json["recording_start"]).timestamp()
                 self.duration = float(end - start)
+            if (rec_json["recording_type"] == "audio_only"):
+                self.audio_url = rec_json["download_url"]
             self.recording_json = "./transcripts/" + self.meeting_id + ".json"
         return
 
