@@ -2,6 +2,7 @@ import requests
 import http.client
 import json
 import time
+import datetime as dt
 
 
 class Meeting():
@@ -14,6 +15,7 @@ class Meeting():
         self.speaker_vid_url = ""
         self.recording_json = ""
 
+        self.n_participants = 0
 
         self.already_analyzed = False
 
@@ -48,7 +50,7 @@ class Meeting():
                 end = self._str_to_time(rec_json["recording_end"]).timestamp()
                 start = self._str_to_time(rec_json["recording_start"]).timestamp()
                 self.duration = end - start
-            self.recording_json = self.meeting_id + ".json"
+            self.recording_json = "../transcripts/" + self.meeting_id + ".json"
         return
 
     def to_json(self):
@@ -79,8 +81,6 @@ def get_all_meetings():
     data = json.loads(data.decode("UTF-8"))
 
     # With data JSON object, extract different artifacts
-    #print(data)
-    print()
     mtgs = []
     n_meetings = get_n_meetings(data)
     for i in range (n_meetings):

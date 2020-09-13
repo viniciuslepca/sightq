@@ -16,7 +16,7 @@ class App extends React.Component {
             'MEETINGS_PAGE': 'Meetings',
             'TRENDS_PAGE': 'Trends',
             'SETTINGS_PAGE': 'Settings'
-        };
+       };
 
         this.state = {
             userName: "TEMP_USER_NAME",

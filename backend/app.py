@@ -1,5 +1,5 @@
 from flask import Flask, request, abort, jsonify
-from . import analysis
+from helpers import analysis
 
 app = Flask(__name__)
 
@@ -49,7 +49,7 @@ def process_recording():
 
 # Process Transcript
 @app.route("/transcript", methods = ["POST"])
-def process_recording():
+def process_transcript():
     return None
 
 

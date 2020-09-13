@@ -3,7 +3,8 @@ import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Button from "react-bootstrap/Button";
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 // Images
 const thumbsUpImage = require('./images/thumbs-up.png');
 const thumbsDownImage = require('./images/thumbs-down.png');
@@ -22,7 +23,7 @@ const someMeeting = {
 };
 
 const otherMeeting = {
-    id: 1,
+    id: 2,
     title: "Lecture 7/31/20 - Genomics I",
     runTime: "49min",
     imageUrl: "https://via.placeholder.com/300X150",
@@ -47,35 +48,54 @@ class MeetingsPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            meetings: [someMeeting, otherMeeting]
+            meetings: [someMeeting, otherMeeting],
+            displayDetailedMeeting: null
         }
     }
 
+    setDisplayDetailedMeeting = (meeting) => {
+        this.setState({displayDetailedMeeting: meeting})
+    };
+
+    // TODO
     getMeetings = () => {
         // Some API Call to get meeting data
         // Update state with meeting objects
     };
 
     render() {
-        return this.state.meetings.map(meeting => <MeetingCard key={Math.random()} meeting={meeting}/>);
+        return (
+            <div>
+                {this.state.meetings.map(meeting => <MeetingCard key={meeting.id}
+                                                                 meeting={meeting}
+                                                                 setDisplayDetailedMeeting={this.setDisplayDetailedMeeting}/>)}
+                <DetailedMeetingView
+                    show={this.state.displayDetailedMeeting !== null}
+                    meeting={this.state.displayDetailedMeeting}
+                    onHide={() => this.setDisplayDetailedMeeting(null)}
+                />
+            </div>
+        );
     }
 }
 
 class MeetingCard extends React.Component {
     render() {
+        const meeting = this.props.meeting;
         return (
             <Card style={{marginBottom: "10px"}}>
                 <Card.Body>
                     <Container>
                         <Row>
-                            <Col md="auto"><Card.Img src={this.props.meeting.imageUrl} alt="Meeting"/></Col>
+                            <Col md="auto"><Card.Img src={meeting.imageUrl} alt="Meeting"/></Col>
                             <Col>
-                                <Card.Title>{this.props.meeting.title}</Card.Title>
-                                <Card.Subtitle className="mb-2 text-muted">Runtime: {this.props.meeting.runTime}</Card.Subtitle>
-                                <MeetingCardStats meeting={this.props.meeting}/>
+                                <Card.Title>{meeting.title}</Card.Title>
+                                <Card.Subtitle className="mb-2 text-muted">Runtime: {meeting.runTime}</Card.Subtitle>
+                                <MeetingCardStats meeting={meeting}/>
                                 {/*<Card.Link href="#">+ More</Card.Link>*/}
                                 <div style={{textAlign: "right"}}>
-                                    <Button variant="primary">+ Details</Button>
+                                    <Button onClick={() => this.props.setDisplayDetailedMeeting(meeting)}
+                                            variant="primary">+ Details</Button>
                                 </div>
                             </Col>
                         </Row>
@@ -135,8 +155,36 @@ function Property(props) {
                 <Col>{titleCase(props.property.name)}: {formatPercentage(props.property.value)}</Col>
             </Row>
         </Container>
-    )
+    );
+}
 
+/**
+ * @return {null}
+ */
+function DetailedMeetingView(props) {
+    const meeting = props.meeting;
+    if (meeting === null) return null;
+
+    return (
+        <Modal
+            {...props}
+            size="xl"
+            centered>
+            <Modal.Header closeButton>
+                <Modal.Title>
+                    {meeting.title}
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <h6>Runtime: {meeting.runTime}</h6>
+                <p>
+                    Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
+                    dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac
+                    consectetur ac, vestibulum at eros.
+                </p>
+            </Modal.Body>
+        </Modal>
+    );
 }
 
 export default MeetingsPage;
