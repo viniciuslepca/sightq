@@ -133,3 +133,4 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+/backend/helpers/hophacks_creds.json
