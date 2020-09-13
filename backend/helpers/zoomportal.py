@@ -31,6 +31,7 @@ class Meeting():
             "gallery_vid_url" : self.gallery_vid_url,
             "speaker_vid_url" : self.speaker_vid_url,
             "recording_json" : self.recording_json,
+            "audio_url": self.audio_url,
             "n_participants" : self.n_participants,
             "participants" : self.participants,
             "analyzed" : True
@@ -69,7 +70,7 @@ class Meeting():
                 self.duration = float(end - start)
             if (rec_json["recording_type"] == "audio_only"):
                 self.audio_url = rec_json["download_url"]
-            self.recording_json = "./transcripts/" + self.meeting_id.replace("/", "_") + ".json"
+            self.recording_json = "../transcripts/" + self.meeting_id.replace("/", "_") + ".json"
         return
 
 
