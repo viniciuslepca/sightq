@@ -52,6 +52,7 @@ def get_meetings_helper():
             "duration": mtg_data["duration"],
             "imageUrl": mtg_data["speaker_vid_url"],
             "scores": {
+                "complexity": mtg_stats["complexity"],
                 "active_time": 1 - mtg_stats["silence"],
                 "participation_score": mtg_stats["participation_score"],
                 "engagement_score": mtg_stats["engagement_score"]
@@ -77,6 +78,7 @@ def get_specific_meeting_helper(meeting_id):
         "analyzed": mtg_data["analyzed"],
         "scores": {
             #"involvement": mtg_stats["involvement"],
+            "complexity": mtg_stats["complexity"],
             "participation_score": mtg_stats["participation_score"],
             "engagement_score": mtg_stats["engagement_score"],
             "active_time": 1 - mtg_stats["silence"]

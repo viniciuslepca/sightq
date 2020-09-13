@@ -66,7 +66,8 @@ class MeetingMetric():
               "engagement_score": self.engagement_score,
               "silence": self.silence,
               "unanswered": self.unanswered,
-              "lowest_participants": self.lowest_participants
+              "lowest_participants": self.lowest_participants,
+              "complexity" : self.complexity
             }}
 
     def transcribe_and_analyze(self):
@@ -200,5 +201,7 @@ def get_meeting_metrics(meeting):
     return m
 
 
-mtg = zp.get_all_meetings()[0]
-get_meeting_metrics(mtg)
+def regenerate_all_meetings():
+    mtgs = zp.get_all_meetings()
+    for m in mtgs:
+        get_meeting_metrics(m)

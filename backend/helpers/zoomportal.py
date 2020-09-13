@@ -31,6 +31,7 @@ class Meeting():
             "gallery_vid_url" : self.gallery_vid_url,
             "speaker_vid_url" : self.speaker_vid_url,
             "recording_json" : self.recording_json,
+            "audio_url" : self.audio_url,
             "n_participants" : self.n_participants,
             "participants" : self.participants,
             "analyzed" : True
