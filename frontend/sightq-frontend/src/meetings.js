@@ -20,7 +20,7 @@ function formatPercentage(number) {
     return (number * 100).toFixed(0) + "%";
 }
 
-class MeetingsPage extends React.Component {
+export default class MeetingsPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -49,7 +49,7 @@ class MeetingsPage extends React.Component {
 
     render() {
         return (
-            <div>
+            <div id="meetings-body">
                 {this.state.meetings.map(meeting => <MeetingCard key={meeting.id}
                                                                  meeting={meeting}
                                                                  setDisplayDetailedMeeting={this.setDisplayDetailedMeeting}/>)}
@@ -68,18 +68,32 @@ class MeetingCard extends React.Component {
     render() {
         const meeting = this.props.meeting;
         return (
-            <Card style={{marginBottom: "10px"}}>
+            <Card style={{marginBottom: "10px", backgroundColor: "#f8f9fa"}}>
                 <Card.Body>
                     <Container>
                         <Row>
                             <Col md="auto"><Card.Img src={meeting.imageUrl} alt="Meeting"/></Col>
                             <Col>
                                 <Card.Title>{meeting.title}</Card.Title>
-                                <Card.Subtitle className="mb-2 text-muted">Duration: {meeting.duration}</Card.Subtitle>
-                                <MeetingCardStats meeting={meeting}/>
+                                {
+                                    meeting.analyzed ?
+                                        <div>
+                                            <Card.Subtitle className="mb-2 text-muted">Duration: {meeting.duration}</Card.Subtitle>
+                                            <MeetingCardStats meeting={meeting}/>
+                                        </div> :
+                                        null
+                                }
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
                                 <div style={{textAlign: "right"}}>
-                                    <Button onClick={() => this.props.setDisplayDetailedMeeting(meeting.id)}
-                                            variant="primary">+ Details</Button>
+                                    {
+                                        meeting.analyzed ?
+                                            <Button onClick={() => this.props.setDisplayDetailedMeeting(meeting.id)}
+                                                    variant="primary">+ Details</Button> :
+                                            <Button disabled>In Analysis</Button>
+                                    }
                                 </div>
                             </Col>
                         </Row>
@@ -107,7 +121,6 @@ class MeetingCardStats extends React.Component {
                 negativeScores.push(score)
             }
         }
-
 
         return (
             <Card.Body>
@@ -179,15 +192,18 @@ class DetailedMeetingView extends React.Component {
                 {...this.props}
                 size="xl"
                 centered>
-                <Modal.Header closeButton>
-                    <Modal.Title>
-                        {this.state.meeting.title}
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <h6>Duration: {this.state.meeting.duration}</h6>
-                    <DetailedMeetingInformation/>
-                </Modal.Body>
+                <div style={{backgroundColor: "#f8f9fa"}}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>
+                            {this.state.meeting.title}
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <h6>Duration: {this.state.meeting.duration}</h6>
+                        <DetailedMeetingInformation/>
+                    </Modal.Body>
+                </div>
+
             </Modal>
         );
     }
@@ -210,17 +226,17 @@ function DetailedMeetingInformation(props) {
         <Container>
             <Row>
                 <Col>
-                    <XYPlot height={300} width={300}>
-                        <VerticalGridLines />
-                        <HorizontalGridLines />
-                        <XAxis />
-                        <YAxis />
-                        <LineSeries data={data} />
-                    </XYPlot>
+                    <Card>
+                        <XYPlot height={300} width={300}>
+                            <VerticalGridLines />
+                            <HorizontalGridLines />
+                            <XAxis />
+                            <YAxis />
+                            <LineSeries data={data} />
+                        </XYPlot>
+                    </Card>
                 </Col>
             </Row>
         </Container>
     );
 }
-
-export default MeetingsPage;
