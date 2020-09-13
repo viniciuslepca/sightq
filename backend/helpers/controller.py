@@ -51,8 +51,9 @@ def get_meetings_helper():
             "duration": mtg_data["duration"],
             "imageUrl": mtg_data["speaker_vid_url"],
             "scores": {
-                "involvement": mtg_stats["involvement"],
-                "participation_score": mtg_stats["participation_score"]
+                "active_time": 1 - mtg_stats["silence"],
+                "participation_score": mtg_stats["participation_score"],
+                "engagement_score": mtg_stats["engagement_score"]
         }}
         output_mtgs.append(mtg_json)
     return output_mtgs
@@ -74,16 +75,16 @@ def get_specific_meeting_helper(meeting_id):
         "participants": mtg_data["participants"],
         "analyzed": mtg_data["analyzed"],
         "scores": {
-            "involvement": mtg_stats["involvement"],
+            #"involvement": mtg_stats["involvement"],
             "participation_score": mtg_stats["participation_score"],
             "engagement_score": mtg_stats["engagement_score"],
-            "silence": mtg_stats["silence"],
-            "unanswered": mtg_stats["unanswered"]
+            "active_time": 1 - mtg_stats["silence"]
         },
         "properties": {
             "participation": mtg_stats["participation"],
             "engagement": mtg_stats["engagement"],
-            "lowest_participants": mtg_stats["lowest_participants"]
+            "lowest_participants": mtg_stats["lowest_participants"],
+            "unanswered": mtg_stats["unanswered"]
         }}
     return mtg_json
 

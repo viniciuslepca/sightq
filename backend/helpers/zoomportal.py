@@ -25,14 +25,14 @@ class Meeting():
         return {
             "id" : self.meeting_id,
             "topic" : self.topic,
-            "duration" : self.duration.__str__(),
+            "duration" : self.duration,
             "start_time" : self.start_time.__str__(),
             "gallery_vid_url" : self.gallery_vid_url,
             "speaker_vid_url" : self.speaker_vid_url,
             "recording_json" : self.recording_json,
             "n_participants" : self.n_participants,
             "participants" : self.participants,
-            "analyzed" : False
+            "analyzed" : True
         }
 
     def _str_to_time(self, t):
@@ -60,12 +60,12 @@ class Meeting():
                 self.speaker_vid_url = rec_json["download_url"]
                 end = self._str_to_time(rec_json["recording_end"]).timestamp()
                 start = self._str_to_time(rec_json["recording_start"]).timestamp()
-                self.duration = end - start
+                self.duration = float(end - start)
             if (rec_json["recording_type"] == "gallery_view"):
                 self.gallery_vid_url = rec_json["download_url"]
                 end = self._str_to_time(rec_json["recording_end"]).timestamp()
                 start = self._str_to_time(rec_json["recording_start"]).timestamp()
-                self.duration = end - start
+                self.duration = float(end - start)
             self.recording_json = "../transcripts/" + self.meeting_id + ".json"
         return
 
