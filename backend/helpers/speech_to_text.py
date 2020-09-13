@@ -9,13 +9,12 @@ from google.cloud import storage
 from google.oauth2 import service_account
 from pydub import AudioSegment
 import textstat
+import uuid
 
-file_name = "GMT20200912-155128_Conner-Del.m4a"
-
-def get_transcript(file, file_name):
+def get_transcript(file):
 
     bucket_name = "hophacks2020"
-    file_name_wav = file_name.replace(".m4a", ".wav")
+    file_name_wav = str(uuid.uuid4()) + ".wav"
 
     audio = AudioSegment.from_file(file)
     mem_file = io.BytesIO()
@@ -55,6 +54,3 @@ def get_transcript(file, file_name):
 def get_text_score(transcript):
     return textstat.flesch_kincaid_grade(transcript)
 
-with open(file_name, "rb") as f:
-    trans = get_transcript(f, file_name)
-    print(get_text_score(trans))

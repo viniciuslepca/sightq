@@ -1,12 +1,15 @@
 import json
 from datetime import datetime as dt, timezone
 import os
+import io
 import zoomportal as zp
 import numpy as np
 
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
+import speech_to_text as stt
+import requests
 
 # Initialize this project with firebase support
 # KEYS file not shared for security reasons
@@ -43,6 +46,8 @@ class MeetingMetric():
         self.engagement = [""]
         # How good this engagement distribution this
         self.engagement_score = 0
+        # Complexity of the conversation and length of conversation
+        self.complexity = 0
         # Complete silence
         self.silence = 0.0
         # Number of unanswered questions
@@ -63,6 +68,15 @@ class MeetingMetric():
               "unanswered": self.unanswered,
               "lowest_participants": self.lowest_participants
             }}
+
+    def transcribe_and_analyze(self):
+        r = requests.get(self.meeting.audio_url)
+        f = io.BytesIO(r.content)
+        with f as file:
+            transcript = stt.get_transcript(file)
+            self.complexity = stt.get_text_score(transcript)
+
+
 
     def generate_all_metrics(self):
         users, times = self.get_parallel_arrays(self.meeting.recording_json)
@@ -177,11 +191,15 @@ def get_meeting_metrics(meeting):
     m.meeting = meeting
     # Get all the metrics for the meeting
 
+    m.transcribe_and_analyze()
+
     m.generate_all_metrics()
     ### These are examples for now
     m.push_to_firebase()
     return m
 
+
+def download_audio()
 
 
 

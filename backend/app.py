@@ -68,9 +68,7 @@ def sign_in():
 def process_recording():
     data = request.get_json(force=True)
     assert(data['event'] == 'recording.completed')
-    download_token = None
-    if 'download_token' in data:
-        download_token = data['download_token']
+    controller.get_meeting_and_metrics(data['payload']['object']['uuid'])
     return jsonify({
         'success': True
     })
