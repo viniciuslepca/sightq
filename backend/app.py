@@ -18,6 +18,7 @@ meeting_1 = {
     'title': "Lecture 8/2/20 - Genomics II",
     'duration': "1h 14min",
     'imageUrl': "https://via.placeholder.com/300X150",
+    'analyzed': True,
     'scores': {
         'engagement': 0.92,
         'effectiveness': 0.3,
@@ -30,6 +31,7 @@ meeting_2 = {
     'title': "Lecture 7/31/20 - Genomics I",
     'duration': "49min",
     'imageUrl': "https://via.placeholder.com/300X150",
+    'analyzed': True,
     'scores': {
         'engagement': 0.97,
         'effectiveness': 0.89,
@@ -52,7 +54,6 @@ def get_meetings():
 def get_specific_meeting(meeting_id):
     # meeting = get_specific_meeeting_helper(meeting_id)
     meeting = meeting_1 if meeting_id == '1' else meeting_2
-    print(meeting_id == 1)
     return jsonify({
         'success': True,
         'meeting': meeting
