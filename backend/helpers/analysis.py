@@ -34,7 +34,7 @@ class MeetingMetric():
         # Meeting ID
         self.meeting = ""
         # Number of times each person talked
-        self.participation = [""]
+        self.participation = 0
         # How good this participation distribution this
         self.participation_score = 0
         # Number of reactions total
@@ -73,6 +73,23 @@ class MeetingMetric():
         self.silence = self.get_silence(sum_dict)
         self.unanswered = self.get_unanswered(users, times)
         self.lowest_participants = self.get_lowest_participants(sum_dict)
+
+        self.engagement_score = self.get_engagement_score()
+        self.participation_score = self.get_participation_score()
+
+    def get_participation_score(self):
+        a = self.participation  / (4 * (self.meeting.n_participants * self.meeting.duration / 60) ** (1.0 / 2))
+        if (a > 1):
+            return 1
+        if (a < 0):
+            return 0
+        return a
+
+    def get_engagement_score(self):
+        eng = np.asarray(self.engagement)
+        avg = np.average(eng)
+        return float((eng[eng - (0.5) * avg > 0]) / len(self.engagement))
+
 
     def get_lowest_participants(self, sum_dict):
         time = []
@@ -151,7 +168,6 @@ class MeetingMetric():
     def push_to_firebase(self):
         ref = db.reference("/meetings").child(self.meeting.meeting_id)
         ref.set(self.to_dict())
-
 
 
 def get_meeting_metrics(meeting):
