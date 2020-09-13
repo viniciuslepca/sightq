@@ -11,30 +11,6 @@ const thumbsDownImage = require('./images/thumbs-down.png');
 
 const baseUrl = "http://localhost:5000";
 
-const someMeeting = {
-    id: 1,
-    title: "Lecture 8/2/20 - Genomics II",
-    duration: "1h 14min",
-    imageUrl: "https://via.placeholder.com/300X150",
-    scores: {
-        engagement: 0.92,
-        effectiveness: 0.3,
-        humor: 0.6
-    }
-};
-
-const otherMeeting = {
-    id: 2,
-    title: "Lecture 7/31/20 - Genomics I",
-    duration: "49min",
-    imageUrl: "https://via.placeholder.com/300X150",
-    scores: {
-        engagement: 0.97,
-        effectiveness: 0.89,
-        humor: 0.35
-    }
-};
-
 function titleCase(str) {
     return str.toLowerCase().split(' ').map(function(word) {
         return word.replace(word[0], word[0].toUpperCase());
@@ -49,20 +25,23 @@ class MeetingsPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            meetings: [someMeeting, otherMeeting],
+            meetings: [],
             displayDetailedMeeting: null // Hold ID of meeting to be displayed, null otherwise
         }
     }
 
-    setDisplayDetailedMeeting = (meetingId) => {
-        this.setState({displayDetailedMeeting: meetingId})
+    setDisplayDetailedMeeting = (id) => {
+        this.setState({displayDetailedMeeting: id})
     };
 
     getMeetings = async () => {
-        const url = "http://localhost:5000/meetings";
+        const url = baseUrl + "/meetings";
         const response = await fetch(url).then(response => response.json());
-        console.log(response);
-        // Update state with meeting objects
+        if (response.success) {
+            this.setState({meetings: response.meetings})
+        } else {
+            alert('Something went wrong when extracting meetings!')
+        }
     };
 
     componentDidMount() {
@@ -77,7 +56,7 @@ class MeetingsPage extends React.Component {
                                                                  setDisplayDetailedMeeting={this.setDisplayDetailedMeeting}/>)}
                 <DetailedMeetingView
                     show={this.state.displayDetailedMeeting !== null}
-                    meetingId={this.state.displayDetailedMeeting}
+                    id={this.state.displayDetailedMeeting}
                     onHide={() => this.setDisplayDetailedMeeting(null)}
                 />
             </div>
@@ -172,33 +151,41 @@ class DetailedMeetingView extends React.Component {
     }
 
     getMeetingDetail = async () => {
-        const url = baseUrl + "/meetings/" + this.props.meetingId;
+        const url = baseUrl + "/meetings/" + this.props.id;
         const response = await fetch(url).then(response => response.json());
-        console.log(response);
+        if (response.success) {
+            this.setState({meeting: response.meeting})
+        } else {
+            alert("Something went wrong!")
+        }
     };
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (prevProps.meetingId !== this.props.meetingId) this.getMeetingDetail();
+        if (prevProps.id !== this.props.id) {
+            if (this.props.id !== null) {
+                this.getMeetingDetail();
+            } else {
+                this.setState({meeting: null})
+            }
+        }
     }
 
     render() {
-        const meetingId = this.props.meetingId;
-        if (meetingId === null) return null;
+        const id = this.props.id;
+        if (id === null || this.state.meeting === null) return null;
 
         return (
             <Modal
-                {...this.state.props}
+                {...this.props}
                 size="xl"
-                centered>z
+                centered>
                 <Modal.Header closeButton>
                     <Modal.Title>
-                        {/*{meeting.title}*/}
-                        Title
+                        {this.state.meeting.title}
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {/*<h6>Duration: {meeting.duration}</h6>*/}
-                    <h6>Test duration</h6>
+                    <h6>Duration: {this.state.meeting.duration}</h6>
                     <p>
                         Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
                         dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac

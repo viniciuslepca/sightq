@@ -12,10 +12,37 @@ CORS(app)
 # Front end sends request to server - I interpret and send response
 # How to listen for these requests? Based on path and method
 
+# TODO: REMOVE THIS
+meeting_1 = {
+    'id': 1,
+    'title': "Lecture 8/2/20 - Genomics II",
+    'duration': "1h 14min",
+    'imageUrl': "https://via.placeholder.com/300X150",
+    'scores': {
+        'engagement': 0.92,
+        'effectiveness': 0.3,
+        'humor': 0.6
+    }
+}
+
+meeting_2 = {
+    'id': 2,
+    'title': "Lecture 7/31/20 - Genomics I",
+    'duration': "49min",
+    'imageUrl': "https://via.placeholder.com/300X150",
+    'scores': {
+        'engagement': 0.97,
+        'effectiveness': 0.89,
+        'humor': 0.35
+    }
+}
+
+meetings_global = [meeting_1, meeting_2]
+
 @app.route('/meetings')
 def get_meetings():
     # meetings = get_meetings_helper()
-    meetings = [{'id': 1}, {'id': 2}]
+    meetings = meetings_global
     return jsonify({
         'success': True,
         'meetings': meetings
@@ -24,7 +51,8 @@ def get_meetings():
 @app.route('/meetings/<meeting_id>')
 def get_specific_meeting(meeting_id):
     # meeting = get_specific_meeeting_helper(meeting_id)
-    meeting = {'id': 1}
+    meeting = meeting_1 if meeting_id == '1' else meeting_2
+    print(meeting_id == 1)
     return jsonify({
         'success': True,
         'meeting': meeting
