@@ -15,3 +15,13 @@
 - CSS
 - Jupyter Notebook
 
+## How it works
+SightQ leverages a linked Zoom sign-in along with custom data analysis in creating a web portal for instructors to view analysis. This will provide insight into effectiveness of meetings, as well as giving suggestions for future improvement.
+
+## How we built it
+--
+
+## What's next for SightQ?
+- gathering survey data to create new metrics
+- gathering trial data to refine mathematical models
+
