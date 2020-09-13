@@ -16,17 +16,29 @@ class App extends React.Component {
 
         const pages = {
             'MEETINGS_PAGE': 'Meetings',
-            'TRENDS_PAGE': 'Trends',
-            'SETTINGS_PAGE': 'Settings'
+            'TRENDS_PAGE': 'Trends'
        };
 
         this.state = {
-            userName: "TEMP_USER_NAME",
+            userName: "Conner Delahanty",
             activePage: pages.MEETINGS_PAGE,
             pages: pages,
             baseUrl: "http://localhost:5000"
         };
     }
+
+    // Based on https://stackoverflow.com/questions/37096367/how-to-convert-seconds-to-minutes-and-hours-in-javascript
+    secondsToHms = d => {
+        d = Number(d);
+        const h = Math.floor(d / 3600);
+        const m = Math.floor(d % 3600 / 60);
+        const s = Math.floor(d % 3600 % 60);
+
+        const hDisplay = h > 0 ? h + " h, " : "";
+        const mDisplay = m > 0 ? m + " min, " : "";
+        const sDisplay = s > 0 ? s + " s" : "";
+        return hDisplay + mDisplay + sDisplay;
+    };
 
     setActivePage = (page) => {
         this.setState({activePage: page});
@@ -35,11 +47,9 @@ class App extends React.Component {
     renderActivePage = () => {
         switch (this.state.activePage) {
             case this.state.pages.MEETINGS_PAGE:
-                return <MeetingsPage baseurl={this.state.baseUrl}/>;
+                return <MeetingsPage baseurl={this.state.baseUrl} secondsconverter={this.secondsToHms}/>;
             case this.state.pages.TRENDS_PAGE:
-                return <TrendsPage baseurl={this.state.baseUrl}/>;
-            case this.state.pages.SETTINGS_PAGE:
-                return <p>Settings page</p>;
+                return <TrendsPage baseurl={this.state.baseUrl} secondsconverter={this.secondsToHms}/>;
             default:
                 return null
         }
