@@ -32,7 +32,7 @@ class Meeting():
             "recording_json" : self.recording_json,
             "n_participants" : self.n_participants,
             "participants" : self.participants,
-            "analyzed" : False
+            "analyzed" : True
         }
 
     def _str_to_time(self, t):
