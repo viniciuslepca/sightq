@@ -1,7 +1,9 @@
 from flask import Flask, request, abort, jsonify
-from helpers import analysis
+from flask_cors import CORS
+from helpers import controller
 
 app = Flask(__name__)
+CORS(app)
 
 # Path and method
 # Google.com/search -> /search = path
@@ -9,6 +11,31 @@ app = Flask(__name__)
 
 # Front end sends request to server - I interpret and send response
 # How to listen for these requests? Based on path and method
+
+@app.route('/meetings')
+def get_meetings():
+    meetings = controller.get_meetings_helper()
+    return jsonify({
+        'success': True,
+        'meetings': meetings
+    })
+
+@app.route('/meetings/<meeting_id>')
+def get_specific_meeting(meeting_id):
+    meeting = controller.get_specific_meeting_helper(meeting_id)
+    return jsonify({
+        'success': True,
+        'meeting': meeting
+    })
+
+@app.route('/trends/<field>')
+def get_trends_for_field(field):
+    trends = controller.get_historical_field(field)
+    return jsonify({
+        'success': True,
+        'trends': trends,
+        'field': field
+    })
 
 
 #######################
@@ -82,6 +109,14 @@ def index(meetingid):
 # also header parameters
 '''
 
+@app.errorhandler(400)
+def not_found(error):
+    return jsonify({
+        "success": False,
+        "error_code": 400,
+        "message": "Bad Request"
+    }), 400
+
 @app.errorhandler(404)
 def not_found(error):
     return jsonify({
@@ -90,5 +125,13 @@ def not_found(error):
         "message": "Not Found"
     }), 404
 
+@app.errorhandler(500)
+def not_found(error):
+    return jsonify({
+        "success": False,
+        "error_code": 500,
+        "message": "Internal Server Error"
+    }), 500
+
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)

@@ -5,37 +5,13 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import {XYPlot, VerticalGridLines, HorizontalGridLines, LineSeries, XAxis, YAxis} from 'react-vis';
 // Images
 const thumbsUpImage = require('./images/thumbs-up.png');
 const thumbsDownImage = require('./images/thumbs-down.png');
 
-
-const someMeeting = {
-    id: 1,
-    title: "Lecture 8/2/20 - Genomics II",
-    runTime: "1h 14min",
-    imageUrl: "https://via.placeholder.com/300X150",
-    properties: {
-        engagement: 0.92,
-        effectiveness: 0.3,
-        humor: 0.6
-    }
-};
-
-const otherMeeting = {
-    id: 2,
-    title: "Lecture 7/31/20 - Genomics I",
-    runTime: "49min",
-    imageUrl: "https://via.placeholder.com/300X150",
-    properties: {
-        engagement: 0.97,
-        effectiveness: 0.89,
-        humor: 0.35
-    }
-};
-
 function titleCase(str) {
-    return str.toLowerCase().split(' ').map(function(word) {
+    return str.toLowerCase().replace('_', ' ').split(' ').map(function(word) {
         return word.replace(word[0], word[0].toUpperCase());
     }).join(' ');
 }
@@ -44,34 +20,43 @@ function formatPercentage(number) {
     return (number * 100).toFixed(0) + "%";
 }
 
-class MeetingsPage extends React.Component {
+export default class MeetingsPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            meetings: [someMeeting, otherMeeting],
-            displayDetailedMeeting: null
+            meetings: [],
+            displayDetailedMeeting: null // Hold ID of meeting to be displayed, null otherwise
         }
     }
 
-    setDisplayDetailedMeeting = (meeting) => {
-        this.setState({displayDetailedMeeting: meeting})
+    setDisplayDetailedMeeting = (id) => {
+        this.setState({displayDetailedMeeting: id})
     };
 
-    // TODO
-    getMeetings = () => {
-        // Some API Call to get meeting data
-        // Update state with meeting objects
+    getMeetings = async () => {
+        const url = this.props.baseurl + "/meetings";
+        const response = await fetch(url).then(response => response.json());
+        if (response.success) {
+            this.setState({meetings: response.meetings});
+        } else {
+            alert('Something went wrong when extracting meetings!')
+        }
     };
+
+    componentDidMount() {
+        this.getMeetings();
+    }
 
     render() {
         return (
-            <div>
+            <div id="meetings-body">
                 {this.state.meetings.map(meeting => <MeetingCard key={meeting.id}
                                                                  meeting={meeting}
                                                                  setDisplayDetailedMeeting={this.setDisplayDetailedMeeting}/>)}
                 <DetailedMeetingView
                     show={this.state.displayDetailedMeeting !== null}
-                    meeting={this.state.displayDetailedMeeting}
+                    id={this.state.displayDetailedMeeting}
+                    baseurl={this.props.baseurl}
                     onHide={() => this.setDisplayDetailedMeeting(null)}
                 />
             </div>
@@ -83,19 +68,37 @@ class MeetingCard extends React.Component {
     render() {
         const meeting = this.props.meeting;
         return (
-            <Card style={{marginBottom: "10px"}}>
+            <Card style={{marginBottom: "10px", backgroundColor: "#f8f9fa"}}>
                 <Card.Body>
                     <Container>
                         <Row>
-                            <Col md="auto"><Card.Img src={meeting.imageUrl} alt="Meeting"/></Col>
+                            {/*<Col md="auto"><Card.Img src={meeting.imageUrl} alt="Meeting"/></Col>*/}
+                            <Col md="auto">
+                                <video width="320" height="240" controls>
+                                    <source src={meeting.imageUrl}/>
+                                </video>
+                            </Col>
                             <Col>
                                 <Card.Title>{meeting.title}</Card.Title>
-                                <Card.Subtitle className="mb-2 text-muted">Runtime: {meeting.runTime}</Card.Subtitle>
-                                <MeetingCardStats meeting={meeting}/>
-                                {/*<Card.Link href="#">+ More</Card.Link>*/}
+                                {
+                                    meeting.analyzed ?
+                                        <div>
+                                            <Card.Subtitle className="mb-2 text-muted">Duration: {meeting.duration}</Card.Subtitle>
+                                            <MeetingCardStats meeting={meeting}/>
+                                        </div> :
+                                        null
+                                }
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
                                 <div style={{textAlign: "right"}}>
-                                    <Button onClick={() => this.props.setDisplayDetailedMeeting(meeting)}
-                                            variant="primary">+ Details</Button>
+                                    {
+                                        meeting.analyzed ?
+                                            <Button onClick={() => this.props.setDisplayDetailedMeeting(meeting.id)}
+                                                    variant="primary">+ Details</Button> :
+                                            <Button disabled>In Analysis</Button>
+                                    }
                                 </div>
                             </Col>
                         </Row>
@@ -109,33 +112,32 @@ class MeetingCard extends React.Component {
 class MeetingCardStats extends React.Component {
     render() {
         const cutOff = 0.7;
-        let positiveProperties = [];
-        let negativeProperties = [];
-        for (const [key, value] of Object.entries(this.props.meeting.properties)) {
-            const property = {
+        let positiveScores = [];
+        let negativeScores = [];
+        for (const [key, value] of Object.entries(this.props.meeting.scores)) {
+            const score = {
                 name: key,
                 value: value
             };
 
             if (value >= cutOff) {
-                positiveProperties.push(property)
+                positiveScores.push(score)
             } else {
-                negativeProperties.push(property)
+                negativeScores.push(score)
             }
         }
-
 
         return (
             <Card.Body>
                 <Container>
                     <Row>
                         <Col>
-                            {positiveProperties.map(property => <Property type="positive"
-                                                                          key={property.name} property={property}/>)}
+                            {positiveScores.map(score => <Property type="positive"
+                                                                          key={score.name} score={score}/>)}
                         </Col>
                         <Col>
-                            {negativeProperties.map(property => <Property type="negative"
-                                                                          key={property.name} property={property}/>)}
+                            {negativeScores.map(score => <Property type="negative"
+                                                                          key={score.name} score={score}/>)}
                         </Col>
                     </Row>
                 </Container>
@@ -146,45 +148,100 @@ class MeetingCardStats extends React.Component {
 
 function Property(props) {
     let imageRef = props.type === "positive" ? thumbsUpImage : thumbsDownImage;
-    let imageAlt = props.type === "positive" ? "Positive property" : "Negative property";
+    let imageAlt = props.type === "positive" ? "Positive score" : "Negative score";
 
     return (
         <Container>
             <Row>
                 <Col md="auto"><img style={{width: "20px", height: "20px"}} src={imageRef} alt={imageAlt}/></Col>
-                <Col>{titleCase(props.property.name)}: {formatPercentage(props.property.value)}</Col>
+                <Col>{titleCase(props.score.name)}: {formatPercentage(props.score.value)}</Col>
             </Row>
         </Container>
     );
 }
 
-/**
- * @return {null}
- */
-function DetailedMeetingView(props) {
-    const meeting = props.meeting;
-    if (meeting === null) return null;
+class DetailedMeetingView extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            meeting: null
+        }
+    }
 
-    return (
-        <Modal
-            {...props}
-            size="xl"
-            centered>
-            <Modal.Header closeButton>
-                <Modal.Title>
-                    {meeting.title}
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <h6>Runtime: {meeting.runTime}</h6>
-                <p>
-                    Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
-                    dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac
-                    consectetur ac, vestibulum at eros.
-                </p>
-            </Modal.Body>
-        </Modal>
-    );
+    getMeetingDetail = async () => {
+        const url = this.props.baseurl + "/meetings/" + this.props.id;
+        const response = await fetch(url).then(response => response.json());
+        if (response.success) {
+            this.setState({meeting: response.meeting})
+        } else {
+            alert("Something went wrong!")
+        }
+    };
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps.id !== this.props.id) {
+            if (this.props.id !== null) {
+                this.getMeetingDetail();
+            } else {
+                this.setState({meeting: null})
+            }
+        }
+    }
+
+    render() {
+        const id = this.props.id;
+        if (id === null || this.state.meeting === null) return null;
+
+        return (
+            <Modal
+                {...this.props}
+                size="xl"
+                centered>
+                <div style={{backgroundColor: "#f8f9fa"}}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>
+                            {this.state.meeting.title}
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <h6>Duration: {this.state.meeting.duration}</h6>
+                        <DetailedMeetingInformation/>
+                    </Modal.Body>
+                </div>
+
+            </Modal>
+        );
+    }
 }
 
-export default MeetingsPage;
+function DetailedMeetingInformation(props) {
+    const data = [
+        {x: 0, y: 8},
+        {x: 1, y: 5},
+        {x: 2, y: 4},
+        {x: 3, y: 9},
+        {x: 4, y: 1},
+        {x: 5, y: 7},
+        {x: 6, y: 6},
+        {x: 7, y: 3},
+        {x: 8, y: 2},
+        {x: 9, y: 0}
+    ];
+    return (
+        <Container>
+            <Row>
+                <Col>
+                    <Card>
+                        <XYPlot height={300} width={300}>
+                            <VerticalGridLines />
+                            <HorizontalGridLines />
+                            <XAxis />
+                            <YAxis />
+                            <LineSeries data={data} />
+                        </XYPlot>
+                    </Card>
+                </Col>
+            </Row>
+        </Container>
+    );
+}

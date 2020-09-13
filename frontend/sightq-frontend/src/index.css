@@ -1,4 +1,8 @@
-#app-body {
+#meetings-body {
     max-width: 80%;
     margin: 2em auto;
+}
+
+#trends-body {
+    margin: 1em;
 }
