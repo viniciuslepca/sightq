@@ -1,7 +1,7 @@
 import json
 from datetime import datetime, timezone
 import os
-import zoomportal as zp
+from . import zoomportal as zp
 
 import firebase_admin
 from firebase_admin import credentials
