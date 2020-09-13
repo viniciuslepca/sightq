@@ -1,5 +1,5 @@
 from flask import Flask, request, abort, jsonify
-from . import analysis
+from helpers import analysis
 
 app = Flask(__name__)
 
