@@ -67,7 +67,6 @@ class Meeting():
                 end = self._str_to_time(rec_json["recording_end"]).timestamp()
                 start = self._str_to_time(rec_json["recording_start"]).timestamp()
                 self.duration = float(end - start)
-            self.recording_json = "./transcripts/" + self.meeting_id.replace("/", "_") + ".json"
             if (rec_json["recording_type"] == "audio_only"):
                 self.audio_url = rec_json["download_url"]
             self.recording_json = "./transcripts/" + self.meeting_id.replace("/", "_") + ".json"
@@ -75,7 +74,7 @@ class Meeting():
 
 
 def _get_jwt():
-    with open('./jwt.json') as f:
+    with open('../jwt.json') as f:
         jwt = json.load(f)
     return jwt["jwt"]
 
@@ -108,9 +107,9 @@ def get_all_meetings():
         # Get participants
         conn.request("GET", f"/v2/past_meetings/{m.meeting_id}/participants", headers = headers)
         res = conn.getresponse()
-        data = res.read()
-        data = json.loads(data.decode("UTF-8"))
-        for name in data["participants"]:
+        data2 = res.read()
+        data2 = json.loads(data2.decode("UTF-8"))
+        for name in data2["participants"]:
             m.participants.append(name["name"])
         m.participants = list(set(m.participants))
         m.n_participants = len(m.participants)

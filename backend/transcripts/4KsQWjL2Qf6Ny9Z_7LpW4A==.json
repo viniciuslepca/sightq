@@ -1,0 +1,104 @@
+{
+	"timeline": [{
+			"ts": "00:00:00.000",
+			"users": [{
+				"user_id": 16778240,
+				"username": "Professor Calamitous"
+			}]
+		},
+		{
+			"ts": "00:00:53.410",
+			"users": []
+		},
+		{
+			"ts": "00:00:58.310",
+			"users": [{
+				"user_id": 15277193,
+				"username": "Bob Ross"
+			}]
+		},
+		{
+			"ts": "00:01:11.410",
+			"users": []
+		},
+		{
+			"ts": "00:01:15.270",
+			"users": [{
+				"user_id": 16778240,
+				"username": "Professor Calamitous"
+			}]
+		},
+		{
+			"ts": "00:01:33.830",
+			"users": []
+		},
+		{
+			"ts": "00:01:36.240",
+			"users": [{
+				"user_id": 15277193,
+				"username": "Bob Ross"
+			}]
+		},
+		{
+			"ts": "00:01:39.440",
+			"users": []
+		},
+		{
+			"ts": "00:01:42.360",
+			"users": [{
+				"user_id": 16778240,
+				"username": "Professor Calamitous"
+			}]
+		},
+		{
+			"ts": "00:03:17.040",
+			"users": []
+		},
+		{
+			"ts": "00:03:19.660",
+			"users": [{
+				"user_id": 17429201,
+				"username": "Saint Nick"
+			}]
+		},
+		{
+			"ts": "00:03:31.920",
+			"users": []
+		},
+		{
+			"ts": "00:03:34.100",
+			"users": [{
+				"user_id": 16778240,
+				"username": "Professor Calamitous"
+			}]
+		},
+		{
+			"ts": "00:04:23.070",
+			"users": []
+		},
+		{
+			"ts": "00:04:25.830",
+			"users": [{
+				"user_id": 17429201,
+				"username": "Saint Nick"
+			}]
+		},
+		{
+			"ts": "00:04:28.470",
+			"users": []
+		},
+		{
+			"ts": "00:04:31.550",
+			"users": [{
+				"user_id": 16778240,
+				"username": "Professor Calamitous"
+			}]
+		},
+		{
+			"ts": "00:06:18.810",
+			"users": []
+		}
+
+	],
+	"version": 100
+}

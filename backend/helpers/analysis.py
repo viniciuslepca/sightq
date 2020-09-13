@@ -71,6 +71,7 @@ class MeetingMetric():
 
     def transcribe_and_analyze(self):
         r = requests.get(self.meeting.audio_url)
+        #print(r)
         f = io.BytesIO(r.content)
         with f as file:
             transcript = stt.get_transcript(file)
@@ -197,10 +198,6 @@ def get_meeting_metrics(meeting):
     ### These are examples for now
     m.push_to_firebase()
     return m
-
-
-def download_audio()
-
 
 
 mtg = zp.get_all_meetings()[0]
