@@ -1,6 +1,6 @@
 from flask import Flask, request, abort, jsonify
 from flask_cors import CORS
-from helpers import controller
+from .helpers import controller
 
 app = Flask(__name__)
 CORS(app)
@@ -38,14 +38,9 @@ def get_trends_for_field(field):
     })
 
 
-#######################
-### SIGN IN METHODS ###
-#######################
-
 @app.route("/", methods = ["GET"]) #second is method
 def index():
-    return str(analysis.getExampleData())
-    # I return Json or HTML
+    return "<p>Working</p>"
 
 
 #######################
@@ -78,36 +73,6 @@ def process_recording():
 def process_transcript():
     return None
 
-
-'''
-Have them all return json - key is success : true
-
-
-# path parameter, enforced to be an int
-@app.route("/meetings/<int:meeting_id>", methods = ["GET"]) #second is method
-def index(meetingid):
-    abort(404)
-    # I return Json or HTML
-    return "TestString"
-
-# this puts the ?=
-@app.route("/meetings", methods = ["GET"]) #second is method
-def index(meetingid):
-    q = request.args.get("STRING_NAME")
-    # I return Json or HTML
-    return "TestString"
-
-
-# GET requests cannot have bodies
-# used for user / pass
-@app.route("/meetings", methods = ["POST"]) #second is method
-def index(meetingid):
-    body = request.get_json()
-    # I return Json or HTML
-    return "TestString"
-
-# also header parameters
-'''
 
 @app.errorhandler(400)
 def not_found(error):
