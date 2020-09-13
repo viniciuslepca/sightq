@@ -40,11 +40,13 @@ ref = db.reference("/meetings")
 
 def get_meetings_helper():
     result = ref.get()
+    output_mtgs = []
     for meeting_id in result:
-        mtg_data = result[meeting_id]["meeting"]
-        mtg_stats = result[meeting_id]["stats"]
+        mtg_data = (result[meeting_id])["meeting"]
+        mtg_stats = (result[meeting_id])["stats"]
         mtg_json = {
             "id": mtg_data["id"],
+            "analyzed": mtg_data["analyzed"],
             "title": mtg_data["topic"],
             "duration": mtg_data["duration"],
             "imageUrl": mtg_data["speaker_vid_url"],
@@ -52,16 +54,47 @@ def get_meetings_helper():
                 "involvement": mtg_stats["involvement"],
                 "participation_score": mtg_stats["participation_score"]
         }}
+        output_mtgs.append(mtg_json)
+    return output_mtgs
+
+def get_specific_meeting_helper(meeting_id):
+    result = ref.get()
+    try:
+        mtg_data = result[meeting_id]["meeting"]
+        mtg_stats = result[meeting_id]["stats"]
+    except:
+        return None
+    mtg_json = {
+        "id": mtg_data["id"],
+        "title": mtg_data["topic"],
+        "duration": mtg_data["duration"],
+        "imageUrl": mtg_data["speaker_vid_url"],
+        "n_participation": mtg_data["n_participants"],
+        "start_time": mtg_data["start_time"],
+        "participants": mtg_data["participants"],
+        "analyzed": mtg_data["analyzed"],
+        "scores": {
+            "involvement": mtg_stats["involvement"],
+            "participation_score": mtg_stats["participation_score"],
+            "engagement_score": mtg_stats["engagement_score"],
+            "silence": mtg_stats["silence"],
+            "unanswered": mtg_stats["unanswered"]
+        },
+        "properties": {
+            "participation": mtg_stats["participation"],
+            "engagement": mtg_stats["engagement"],
+            "lowest_participants": mtg_stats["lowest_participants"]
+        }}
     return mtg_json
 
-
-    # {id: , title: , duration: , imageUrl: , scores: {engagement: 0.92, effectiveness: 12, humor: 12, ...}}
-    ###
-    ###
-
-def get_specific_meeting_helper(id):
-    return
-    # ^ + properties
-
 def get_historical_field(field):
-    return
+    result = ref.get()
+    output_mtgs = []
+    for meeting_id in result:
+        mtg_data = result[meeting_id]["meeting"]
+        mtg_stats = result[meeting_id]["stats"]
+        mtg_json = {
+            mtg_data["start_time"]: mtg_stats[field]
+        }
+        output_mtgs.append(mtg_json)
+    return mtg_json

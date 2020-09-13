@@ -33,23 +33,21 @@ class MeetingMetric():
         # Meeting ID
         self.meeting = ""
         # Number of times each person talked
-        self.participation = []
+        self.participation = [""]
         # How good this participation distribution this
         self.participation_score = 0
         # Number of reactions total
         self.involvement = 0.0
         # Total time talked per person
-        self.engagement = []
+        self.engagement = [""]
         # How good this engagement distribution this
         self.engagement_score = 0
         # Complete silence
         self.silence = 0.0
         # Number of unanswered questions
         self.unanswered = 0
-        # Duration of meeting
-        self.duration = 0
         # Names of the lowest participants
-        self.lowest_participants = []
+        self.lowest_participants = [""]
 
     def compute_metrics(self):
         return
@@ -60,7 +58,12 @@ class MeetingMetric():
             "stats" : {
               "participation": self.participation,
               "participation_score": self.participation_score,
-              "involvement": self.involvement
+              "involvement": self.involvement,
+              "engagement": self.engagement,
+              "engagement_score": self.engagement_score,
+              "silence": self.silence,
+              "unanswered": self.unanswered,
+              "lowest_participants": self.lowest_participants
             }}
 
     def push_to_firebase(self):
