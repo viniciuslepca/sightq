@@ -2,13 +2,13 @@ import json
 from datetime import datetime as dt, timezone
 import os
 import io
-import zoomportal as zp
+from . import zoomportal as zp
 import numpy as np
 
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
-import speech_to_text as stt
+from . import speech_to_text as stt
 import requests
 
 # Initialize this project with firebase support
@@ -76,8 +76,7 @@ class MeetingMetric():
         f = io.BytesIO(r.content)
         with f as file:
             transcript = stt.get_transcript(file)
-            self.complexity = stt.get_text_score(transcript)
-
+            self.complexity = stt.get_text_score(transcript) / 100
 
 
     def generate_all_metrics(self):
@@ -199,6 +198,7 @@ def get_meeting_metrics(meeting):
     m.push_to_firebase()
     return m
 
-
-mtg = zp.get_all_meetings()[1]
-get_meeting_metrics(mtg)
+def generate_all_meetings():
+    meetings = zp.get_all_meetings()
+    for m in meetings():
+        get_meeting_metrics(m)

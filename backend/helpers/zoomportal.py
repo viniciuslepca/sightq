@@ -75,7 +75,7 @@ class Meeting():
 
 
 def _get_jwt():
-    with open('../jwt.json') as f:
+    with open('./jwt.json') as f:
         jwt = json.load(f)
     return jwt["jwt"]
 
