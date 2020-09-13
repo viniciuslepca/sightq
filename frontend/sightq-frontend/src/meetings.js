@@ -11,7 +11,7 @@ const thumbsUpImage = require('./images/thumbs-up.png');
 const thumbsDownImage = require('./images/thumbs-down.png');
 
 function titleCase(str) {
-    return str.toLowerCase().split(' ').map(function(word) {
+    return str.toLowerCase().replace('_', ' ').split(' ').map(function(word) {
         return word.replace(word[0], word[0].toUpperCase());
     }).join(' ');
 }
@@ -37,7 +37,7 @@ export default class MeetingsPage extends React.Component {
         const url = this.props.baseurl + "/meetings";
         const response = await fetch(url).then(response => response.json());
         if (response.success) {
-            this.setState({meetings: response.meetings})
+            this.setState({meetings: response.meetings});
         } else {
             alert('Something went wrong when extracting meetings!')
         }
@@ -72,7 +72,12 @@ class MeetingCard extends React.Component {
                 <Card.Body>
                     <Container>
                         <Row>
-                            <Col md="auto"><Card.Img src={meeting.imageUrl} alt="Meeting"/></Col>
+                            {/*<Col md="auto"><Card.Img src={meeting.imageUrl} alt="Meeting"/></Col>*/}
+                            <Col md="auto">
+                                <video width="320" height="240" controls>
+                                    <source src={meeting.imageUrl}/>
+                                </video>
+                            </Col>
                             <Col>
                                 <Card.Title>{meeting.title}</Card.Title>
                                 {

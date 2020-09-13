@@ -94,7 +94,8 @@ def get_historical_field(field):
         mtg_data = result[meeting_id]["meeting"]
         mtg_stats = result[meeting_id]["stats"]
         mtg_json = {
-            mtg_data["start_time"]: mtg_stats[field]
+            "start_time": mtg_data["start_time"],
+            "value": mtg_stats[field]
         }
         output_mtgs.append(mtg_json)
-    return mtg_json
+    return output_mtgs

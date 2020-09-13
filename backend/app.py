@@ -12,39 +12,9 @@ CORS(app)
 # Front end sends request to server - I interpret and send response
 # How to listen for these requests? Based on path and method
 
-# TODO: REMOVE THIS
-meeting_1 = {
-    'id': 1,
-    'title': "Lecture 8/2/20 - Genomics II",
-    'duration': "1h 14min",
-    'imageUrl': "https://via.placeholder.com/300X150",
-    'analyzed': True,
-    'scores': {
-        'engagement': 0.92,
-        'effectiveness': 0.3,
-        'humor': 0.6
-    }
-}
-
-meeting_2 = {
-    'id': 2,
-    'title': "Lecture 7/31/20 - Genomics I",
-    'duration': "49min",
-    'imageUrl': "https://via.placeholder.com/300X150",
-    'analyzed': True,
-    'scores': {
-        'engagement': 0.97,
-        'effectiveness': 0.89,
-        'humor': 0.35
-    }
-}
-
-meetings_global = [meeting_1, meeting_2]
-
 @app.route('/meetings')
 def get_meetings():
-    # meetings = get_meetings_helper()
-    meetings = meetings_global
+    meetings = controller.get_meetings_helper()
     return jsonify({
         'success': True,
         'meetings': meetings
@@ -52,11 +22,19 @@ def get_meetings():
 
 @app.route('/meetings/<meeting_id>')
 def get_specific_meeting(meeting_id):
-    # meeting = get_specific_meeeting_helper(meeting_id)
-    meeting = meeting_1 if meeting_id == '1' else meeting_2
+    meeting = controller.get_specific_meeting_helper(meeting_id)
     return jsonify({
         'success': True,
         'meeting': meeting
+    })
+
+@app.route('/trends/<field>')
+def get_trends_for_field(field):
+    trends = controller.get_historical_field(field)
+    return jsonify({
+        'success': True,
+        'trends': trends,
+        'field': field
     })
 
 
@@ -133,6 +111,14 @@ def index(meetingid):
 # also header parameters
 '''
 
+@app.errorhandler(400)
+def not_found(error):
+    return jsonify({
+        "success": False,
+        "error_code": 400,
+        "message": "Bad Request"
+    }), 400
+
 @app.errorhandler(404)
 def not_found(error):
     return jsonify({
@@ -140,6 +126,14 @@ def not_found(error):
         "error_code": 404,
         "message": "Not Found"
     }), 404
+
+@app.errorhandler(500)
+def not_found(error):
+    return jsonify({
+        "success": False,
+        "error_code": 500,
+        "message": "Internal Server Error"
+    }), 500
 
 if __name__ == "__main__":
     app.run(debug=True)
