@@ -42,4 +42,4 @@ def getExampleData():
 
 
 def getFirstName(uid):
-    json =
+    return None

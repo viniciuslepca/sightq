@@ -43,7 +43,7 @@ def process_recording():
 
 # Process Transcript
 @app.route("/transcript", methods = ["POST"])
-def process_recording():
+def process_transcript():
     return None
 
 
