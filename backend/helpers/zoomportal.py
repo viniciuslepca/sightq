@@ -23,7 +23,7 @@ class Meeting():
 
     def to_dict(self):
         return {
-            "id" : self.meeting_id,
+            "id" : self.meeting_id.replace("/", "_"),
             "topic" : self.topic,
             "duration" : self.duration,
             "start_time" : self.start_time.__str__(),
@@ -66,7 +66,7 @@ class Meeting():
                 end = self._str_to_time(rec_json["recording_end"]).timestamp()
                 start = self._str_to_time(rec_json["recording_start"]).timestamp()
                 self.duration = float(end - start)
-            self.recording_json = "./transcripts/" + self.meeting_id + ".json"
+            self.recording_json = "./transcripts/" + self.meeting_id.replace("/", "_") + ".json"
         return
 
 

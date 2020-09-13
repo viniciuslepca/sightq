@@ -166,7 +166,7 @@ class MeetingMetric():
         return (users, times)
 
     def push_to_firebase(self):
-        ref = db.reference("/meetings").child(self.meeting.meeting_id)
+        ref = db.reference("/meetings").child(self.meeting.meeting_id.replace("/", "_"))
         ref.set(self.to_dict())
 
 
