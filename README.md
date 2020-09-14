@@ -30,9 +30,9 @@ The technical aspect was based on how SightQ listens on an authenticated user's 
 - further develop our frontend visualization (allow them to authenticate using their Zoom account for cybersecurity purposes)
 
 ## What does SightQ look like?
-![Main Page- List of all Zoom meetings hosted](/images/SightQ_MainPage.png) <br>
-![Meeting Analysis- Metrics calculated from the Zoom meeting](/images/SightQ_MeetingAnalysis.png) <br>
-![Trends Page- depicts metrics' changes over time from various meetings](/images/SightQ_TrendsPage.png)
+![Main Page- List of all Zoom meetings hosted](/SightQ_MainPage.png) <br>
+![Meeting Analysis- Metrics calculated from the Zoom meeting](/SightQ_MeetingAnalysis.png) <br>
+![Trends Page- depicts metrics' changes over time from various meetings](/SightQ_TrendsPage.png)
 
 ## Check out SightQ yourself!
 http://ac7d9b22f8ff.ngrok.io/
