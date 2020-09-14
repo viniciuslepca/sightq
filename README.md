@@ -29,9 +29,10 @@ The technical aspect was based on how SightQ listens on an authenticated user's 
 - gathering trial data to refine mathematical models
 - further develop our frontend visualization (allow them to authenticate using their Zoom account for cybersecurity purposes)
 
-##
-## Link for SightQ!
+## SightQ 
 
+
+## Link for SightQ!
 http://ac7d9b22f8ff.ngrok.io/
 
 
