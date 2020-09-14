@@ -25,9 +25,9 @@ The technical aspect was based on how SightQ listens on an authenticated user's 
 - Jupyter Notebook
 
 ## What's next for SightQ?
-- gathering survey data to create new metrics
-- gathering trial data to refine mathematical models
-- further develop our frontend visualization (allow them to authenticate using their Zoom account for cybersecurity purposes)
+- Gathering data from Zoom hosts to create new metrics
+- Gathering data from Zoom meetings to improve mathematical models
+- Further develop our frontend visualization (allow users to authenticate using their Zoom account for cybersecurity purposes)
 
 ## What does SightQ look like?
 ### Main Page
