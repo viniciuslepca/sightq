@@ -43,6 +43,9 @@ Found by clicking on any of the hosted meetings. These include specific metrics 
 Depicts the metrics' changes over time from each meeting. <br>
 ![Trends Page- depicts metrics' changes over time from various meetings](/SightQ_TrendsPage.png)
 
+## Watch a video explaining SightQ
+https://www.youtube.com/watch?v=GoiS8Qe2eYw
+
 ## Check out SightQ yourself!
 http://ac7d9b22f8ff.ngrok.io/
 
