@@ -1,5 +1,4 @@
 # SightQ: A better way to meet
-**_SightQ incorporates more data analytics for Zoom meetings to enable meeting hosts to conduct better meetings, whether that be by improving engagement, adapting presentation styles, or decreasing wasted time._**
 
 ## Our inspiration and mission: 
 There's no denying Covid-19 has ushered in an era of working from home whose effects will be felt for a long time. Virtual meeting software has quickly become the norm, and Zoom has established itself as an leading platform for online communication. Academia is one of these communities forced to drastically adapt, and we hope to provide more insight to allow them to continue to improve their methods of teaching. **_SightQ incorporates more data analytics for Zoom meetings to enable meeting hosts to conduct better meetings, whether that be by improving engagement, adapting presentation styles, or decreasing wasted time._**
