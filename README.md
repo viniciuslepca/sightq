@@ -45,10 +45,5 @@ Depicts the metrics' changes over time from each meeting. <br>
 
 ## Watch a video explaining SightQ
 ## https://www.youtube.com/watch?v=GoiS8Qe2eYw&t=1s
-<br>
-<br>
-
-## Check out SightQ yourself!
-## http://ac7d9b22f8ff.ngrok.io/
 
 
